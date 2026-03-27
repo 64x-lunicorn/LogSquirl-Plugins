@@ -43,10 +43,10 @@
     {
       "id": "io.github.logsquirl.serial",
       "name": "Serial Monitor",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "description": "Monitor serial port output from USB-connected devices in LogSquirl tabs",
       "author": "LogSquirl Contributors",
-      "download_url": "https://github.com/64x-lunicorn/LogSquirl-Serial/releases/download/v0.2.0/logsquirl-serial-0.2.0-macos-arm64.zip",
+      "download_url": "https://github.com/64x-lunicorn/LogSquirl-Serial/releases/download/v0.3.0/logsquirl-serial-0.3.0-macos-arm64.zip",
       "sha256": "",
       "platforms": [
         "macos"
@@ -56,10 +56,10 @@
     {
       "id": "io.github.logsquirl.serial",
       "name": "Serial Monitor",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "description": "Monitor serial port output from USB-connected devices in LogSquirl tabs",
       "author": "LogSquirl Contributors",
-      "download_url": "https://github.com/64x-lunicorn/LogSquirl-Serial/releases/download/v0.2.0/logsquirl-serial-0.2.0-linux-x64.zip",
+      "download_url": "https://github.com/64x-lunicorn/LogSquirl-Serial/releases/download/v0.3.0/logsquirl-serial-0.3.0-linux-x64.zip",
       "sha256": "",
       "platforms": [
         "linux"
@@ -69,10 +69,10 @@
     {
       "id": "io.github.logsquirl.serial",
       "name": "Serial Monitor",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "description": "Monitor serial port output from USB-connected devices in LogSquirl tabs",
       "author": "LogSquirl Contributors",
-      "download_url": "https://github.com/64x-lunicorn/LogSquirl-Serial/releases/download/v0.2.0/logsquirl-serial-0.2.0-windows-x64.zip",
+      "download_url": "https://github.com/64x-lunicorn/LogSquirl-Serial/releases/download/v0.3.0/logsquirl-serial-0.3.0-windows-x64.zip",
       "sha256": "",
       "platforms": [
         "windows"

@@ -124,7 +124,7 @@ Get-FileHash myplugin-1.0.0-macos-arm64.zip -Algorithm SHA256
 | Plugin | Version | Description | Repo |
 |--------|---------|-------------|------|
 | Android Logcat | 0.2.0 | Stream logcat from ADB devices | [LogSquirl-Logcat](https://github.com/64x-lunicorn/LogSquirl-Logcat) |
-| Serial Monitor | 0.2.0 | Stream serial port data | [LogSquirl-Serial](https://github.com/64x-lunicorn/LogSquirl-Serial) |
+| Serial Monitor | 0.3.0 | Stream serial port data | [LogSquirl-Serial](https://github.com/64x-lunicorn/LogSquirl-Serial) |
 
 ---
 
