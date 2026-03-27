@@ -1,0 +1,104 @@
+# ============================================================================
+# Validate plugins.json — runs on every push and pull request
+# ============================================================================
+name: Validate plugins.json
+
+on:
+  push:
+    branches: [main]
+    paths: [plugins.json]
+  pull_request:
+    branches: [main]
+    paths: [plugins.json]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate JSON syntax
+        run: python3 -m json.tool plugins.json > /dev/null
+
+      - name: Validate schema
+        shell: python3 {0}
+        run: |
+          import json, sys, re
+
+          VALID_PLATFORMS = {"macos", "linux", "windows"}
+          SEMVER_RE = re.compile(
+              r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
+              r"(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?"
+              r"(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$"
+          )
+          RDNS_RE = re.compile(r"^[a-z][a-z0-9]*(\.[a-z][a-z0-9]*){2,}$")
+
+          with open("plugins.json") as f:
+              data = json.load(f)
+
+          errors = []
+
+          # Top-level checks
+          if data.get("schema_version") != 1:
+              errors.append("schema_version must be 1")
+
+          plugins = data.get("plugins")
+          if not isinstance(plugins, list):
+              errors.append("'plugins' must be an array")
+              print("\n".join(errors))
+              sys.exit(1)
+
+          for i, p in enumerate(plugins):
+              prefix = f"plugins[{i}]"
+
+              # Required string fields
+              for field in ("id", "name", "version", "description", "author",
+                            "download_url", "sha256"):
+                  if not isinstance(p.get(field), str):
+                      errors.append(f"{prefix}: '{field}' must be a string")
+
+              # id: reverse-DNS
+              pid = p.get("id", "")
+              if pid and not RDNS_RE.match(pid):
+                  errors.append(
+                      f"{prefix}: id '{pid}' is not a valid reverse-DNS identifier"
+                  )
+
+              # version: SemVer
+              ver = p.get("version", "")
+              if ver and not SEMVER_RE.match(ver):
+                  errors.append(f"{prefix}: version '{ver}' is not valid SemVer")
+
+              # download_url: HTTPS
+              url = p.get("download_url", "")
+              if url and not url.startswith("https://"):
+                  errors.append(f"{prefix}: download_url must start with https://")
+
+              # platforms: array of known values
+              platforms = p.get("platforms")
+              if not isinstance(platforms, list) or len(platforms) == 0:
+                  errors.append(f"{prefix}: 'platforms' must be a non-empty array")
+              elif not all(pl in VALID_PLATFORMS for pl in platforms):
+                  errors.append(
+                      f"{prefix}: platforms must only contain: "
+                      + ", ".join(sorted(VALID_PLATFORMS))
+                  )
+
+              # api_version: positive integer
+              api_ver = p.get("api_version")
+              if not isinstance(api_ver, int) or api_ver < 1:
+                  errors.append(f"{prefix}: api_version must be a positive integer")
+
+          if errors:
+              print(f"::error::{len(errors)} validation error(s) found:")
+              for e in errors:
+                  print(f"  - {e}")
+              sys.exit(1)
+          else:
+              print(f"✓ plugins.json is valid ({len(plugins)} entries)")
