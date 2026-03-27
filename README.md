@@ -15,19 +15,10 @@ repository to list and install plugins with a single click.
 
 ## How It Works
 
-```
-┌──────────────┐       GET plugins.json        ┌─────────────────────┐
-│  LogSquirl   │  ─────────────────────────►    │  LogSquirl-Plugins  │
-│  (app)       │                                │  (this repo)        │
-└──────┬───────┘                                └─────────────────────┘
-       │
-       │  download_url from matching entry
-       ▼
-┌──────────────────────────────┐
-│  Plugin Release ZIP          │
-│  (e.g. LogSquirl-Logcat)     │
-│  github.com/.../releases/... │
-└──────────────────────────────┘
+```mermaid
+flowchart LR
+    LS["LogSquirl\n(app)"] -- "GET plugins.json" --> PR["LogSquirl-Plugins\n(this repo)"]
+    LS -- "download_url\nfrom matching entry" --> ZIP["Plugin Release ZIP\n(e.g. LogSquirl-Logcat)\ngithub.com/.../releases/..."]
 ```
 
 1. LogSquirl downloads `plugins.json` from this repo's `main` branch.
