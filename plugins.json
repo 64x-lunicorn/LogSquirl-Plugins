@@ -6,6 +6,7 @@
       "name": "Android Logcat",
       "author": "LogSquirl Contributors",
       "description": "Stream Android logcat output from ADB-connected devices into LogSquirl tabs",
+      "license": "GPL-3.0-or-later",
       "repo_url": "https://github.com/64x-lunicorn/LogSquirl-Logcat",
       "releases_url": "https://raw.githubusercontent.com/64x-lunicorn/LogSquirl-Logcat/main/releases.json",
       "icon_url": "https://raw.githubusercontent.com/64x-lunicorn/LogSquirl-Logcat/main/icon.png"
@@ -15,6 +16,7 @@
       "name": "Serial Monitor",
       "author": "LogSquirl Contributors",
       "description": "Monitor serial port output from USB-connected devices in LogSquirl tabs",
+      "license": "GPL-3.0-or-later",
       "repo_url": "https://github.com/64x-lunicorn/LogSquirl-Serial",
       "releases_url": "https://raw.githubusercontent.com/64x-lunicorn/LogSquirl-Serial/main/releases.json",
       "icon_url": "https://raw.githubusercontent.com/64x-lunicorn/LogSquirl-Serial/main/icon.png"
