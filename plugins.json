@@ -20,6 +20,16 @@
       "repo_url": "https://github.com/64x-lunicorn/LogSquirl-Serial",
       "releases_url": "https://raw.githubusercontent.com/64x-lunicorn/LogSquirl-Serial/main/releases.json",
       "icon_url": "https://raw.githubusercontent.com/64x-lunicorn/LogSquirl-Serial/main/icon.png"
+    },
+    {
+      "id": "io.github.logsquirl.tcpdump",
+      "name": "tcpdump / pcap Viewer",
+      "author": "LogSquirl Contributors",
+      "description": "Parse and display tcpdump/pcap capture files with protocol dissection and stream tracking",
+      "license": "GPL-3.0-or-later",
+      "repo_url": "https://github.com/64x-lunicorn/LogSquirl-tcpdump",
+      "releases_url": "https://raw.githubusercontent.com/64x-lunicorn/LogSquirl-tcpdump/main/releases.json",
+      "icon_url": "https://raw.githubusercontent.com/64x-lunicorn/LogSquirl-tcpdump/main/icon.png"
     }
   ]
 }
