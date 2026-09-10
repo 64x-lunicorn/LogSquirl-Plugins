@@ -37,94 +37,131 @@ allowed.
 
 1. **Fork** this repository (or create a branch if you have write access).
 
-2. **Edit `plugins.json`** — add one entry per platform your plugin supports:
+2. **Edit `plugins.json`** — add one catalog entry for your plugin:
 
    ```json
    {
      "id": "io.github.yourname.myplugin",
      "name": "My Plugin",
-     "version": "1.0.0",
-     "description": "Short description of what it does",
      "author": "Your Name",
-     "download_url": "https://github.com/.../releases/download/v1.0.0/myplugin-1.0.0-macos-arm64.zip",
-     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-     "platforms": ["macos"],
-     "api_version": 1
+     "description": "Short description of what it does",
+     "license": "GPL-3.0-or-later",
+     "repo_url": "https://github.com/yourname/myplugin",
+     "releases_url": "https://raw.githubusercontent.com/yourname/myplugin/main/releases.json",
+     "icon_url": "https://raw.githubusercontent.com/yourname/myplugin/main/icon.png"
    }
    ```
+
+   The catalog holds **one entry per plugin**, not one per version or
+   platform. Versions, platforms and checksums live in your own
+   `releases.json`, which the host fetches from `releases_url`.
 
 3. **Open a pull request** against `main`.
 
 4. **CI validates** your change automatically:
    - `plugins.json` must be valid JSON
-   - Every entry must have all required fields
-   - `id` must be a reverse-DNS identifier
-   - `version` must be a valid SemVer string
-   - `download_url` must be a valid HTTPS URL
-   - `platforms` must contain only `"macos"`, `"linux"`, or `"windows"`
-   - `api_version` must be a supported version (currently `1`)
+   - `id`, `name`, `description` and `author` must be non-empty strings
+   - `id` must be a reverse-DNS identifier: dot-separated lowercase
+     alphanumeric segments, at least three of them, **no hyphens**
+     (`^[a-z][a-z0-9]*(\.[a-z][a-z0-9]*){2,}$`)
+   - `repo_url` and `releases_url` must be HTTPS
+   - no duplicate `id` values
 
 5. A maintainer **reviews and merges** the PR.  The updated index is
    live immediately (served via GitHub raw content).
 
-### Updating an Existing Plugin
+### Publishing a New Version
 
-To publish a new version, update the `version` and `download_url` (and
-`sha256`) of the existing entries for your plugin.  Do **not** remove
-older entries — users on older LogSquirl versions may still reference them.
+Nothing changes in this repository. Add the release to your own
+`releases.json` and the host picks it up on the next catalog refresh.
 
 ### Removing a Plugin
 
-Open a PR that removes your plugin's entries from `plugins.json` and
+Open a PR that removes your plugin's entry from `plugins.json` and
 explain the reason in the PR description.
 
 ---
 
 ## Entry Schema
 
-`plugins.json` uses `schema_version: 1`:
+`plugins.json` uses `schema_version: 2`:
 
 ```json
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "plugins": [ ... ]
 }
 ```
 
-### Required Fields
+### Catalog Fields
 
-| Field          | Type       | Description |
-|----------------|------------|-------------|
-| `id`           | `string`   | Reverse-DNS plugin identifier (must match `plugin.json` inside the ZIP) |
-| `name`         | `string`   | Human-readable plugin name |
-| `version`      | `string`   | SemVer version (e.g. `"1.0.0"`, `"0.2.0-beta.1"`) |
-| `description`  | `string`   | One-line description |
-| `author`       | `string`   | Author name or organization |
-| `download_url` | `string`   | Direct HTTPS URL to the plugin ZIP archive |
-| `sha256`       | `string`   | SHA-256 hex digest of the ZIP (empty string disables verification) |
-| `platforms`    | `string[]` | One or more of `"macos"`, `"linux"`, `"windows"` |
-| `api_version`  | `number`   | Plugin API version the plugin was built against (currently `1`) |
+| Field          | Type     | Required | Description |
+|----------------|----------|----------|-------------|
+| `id`           | `string` | yes | Reverse-DNS identifier, must match `plugin.json` inside the ZIP |
+| `name`         | `string` | yes | Human-readable plugin name |
+| `description`  | `string` | yes | One-line description |
+| `author`       | `string` | yes | Author name or organization |
+| `license`      | `string` | no  | SPDX identifier, e.g. `GPL-3.0-or-later` |
+| `repo_url`     | `string` | no  | HTTPS URL of the plugin's repository |
+| `releases_url` | `string` | no  | HTTPS URL of the plugin's `releases.json` |
+| `icon_url`     | `string` | no  | HTTPS URL of a PNG icon, displayed at 48×48 |
 
-### SHA-256 Checksum
+### Release Manifest — `releases.json`
 
-Generate the checksum for your release ZIP:
+Lives in your own repository. Releases are listed **newest first**; the
+host takes the first entry that has an asset for the current platform.
 
-```bash
-# macOS / Linux
-shasum -a 256 myplugin-1.0.0-macos-arm64.zip
-
-# Windows (PowerShell)
-Get-FileHash myplugin-1.0.0-macos-arm64.zip -Algorithm SHA256
+```json
+{
+  "plugin_id": "io.github.yourname.myplugin",
+  "releases": [
+    {
+      "version": "1.0.0",
+      "api_version": 1,
+      "release_notes": "What changed in this version",
+      "assets": [
+        {
+          "platform": "macos",
+          "download_url": "https://github.com/.../myplugin-1.0.0-macos-arm64.zip",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  ]
+}
 ```
+
+`platform` is one of `macos`, `linux`, `windows`.
+
+> [!IMPORTANT]
+> Always fill in `sha256`. An **empty string disables verification** — the
+> host downloads and installs the archive without checking it. Generate the
+> digest from the exact file you upload:
+>
+> ```bash
+> shasum -a 256 myplugin-1.0.0-macos-arm64.zip     # macOS / Linux
+> Get-FileHash myplugin-1.0.0-macos-arm64.zip -Algorithm SHA256   # Windows
+> ```
+
+### Legacy Schema v1
+
+The host still reads `schema_version: 1`, where every version and platform
+is inlined in `plugins.json`. New submissions should use v2.
 
 ---
 
+
 ## Official Plugins
 
-| Plugin | Version | Description | Repo |
-|--------|---------|-------------|------|
-| Android Logcat | 0.2.0 | Stream logcat from ADB devices | [LogSquirl-Logcat](https://github.com/64x-lunicorn/LogSquirl-Logcat) |
-| Serial Monitor | 0.3.0 | Stream serial port data | [LogSquirl-Serial](https://github.com/64x-lunicorn/LogSquirl-Serial) |
+| Plugin | Description | Repo |
+|--------|-------------|------|
+| Android Logcat | Stream Android logcat from ADB-connected devices | [LogSquirl-Logcat](https://github.com/64x-lunicorn/LogSquirl-Logcat) |
+| Custom Footer | Extract key-value pairs from logs with regex rules | [LogSquirl-CustomFooter](https://github.com/64x-lunicorn/LogSquirl-CustomFooter) |
+| Serial Monitor | Stream serial port data from connected devices | [LogSquirl-Serial](https://github.com/64x-lunicorn/LogSquirl-Serial) |
+| tcpdump / pcap Viewer | Render pcap captures as readable packet lists | [LogSquirl-tcpdump](https://github.com/64x-lunicorn/LogSquirl-tcpdump) |
+
+Current versions are listed in each plugin's own `releases.json`.
+
 
 ---
 
