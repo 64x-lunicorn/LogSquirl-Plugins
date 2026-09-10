@@ -12,6 +12,16 @@
       "icon_url": "https://raw.githubusercontent.com/64x-lunicorn/LogSquirl-Logcat/main/icon.png"
     },
     {
+      "id": "io.github.logsquirl.customfooter",
+      "name": "Custom Footer",
+      "author": "LogSquirl Contributors",
+      "description": "Extract key-value pairs from logs via regex rules and show them in a footer bar",
+      "license": "GPL-3.0-or-later",
+      "repo_url": "https://github.com/64x-lunicorn/LogSquirl-CustomFooter",
+      "releases_url": "https://raw.githubusercontent.com/64x-lunicorn/LogSquirl-CustomFooter/main/releases.json",
+      "icon_url": "https://raw.githubusercontent.com/64x-lunicorn/LogSquirl-CustomFooter/main/icon.png"
+    },
+    {
       "id": "io.github.logsquirl.serial",
       "name": "Serial Monitor",
       "author": "LogSquirl Contributors",
